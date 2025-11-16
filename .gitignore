@@ -1,0 +1,41 @@
+# Binaries
+fb2md
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go workspace file
+go.work
+
+# Dependency directories
+vendor/
+
+# Output files
+*.md
+*_images/
+
+# Keep sample files
+!README.md
+!example.md
+
+# macOS
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test files
+*.fb2
+!sample.fb2
