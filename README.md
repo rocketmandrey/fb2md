@@ -58,7 +58,8 @@ Install the required Python dependencies:
 pip install -r scripts/requirements.txt
 ```
 
-**Note:** These scripts currently contain hardcoded paths for specific projects (e.g., *DreamFormulaRussian*). You will need to edit them to point to your specific files.
+**Note:** `improve_translation.py`, `publish_telegraph.py`, and `create_epub.sh` accept file paths as arguments. 
+However, `auto_insert.py` relies on specific line numbers and file paths defined within the script, so you will likely need to edit it for your specific book.
 
 ### 1. `improve_translation.py`
 Uses the Anthropic (Claude) API to improve the quality of machine-translated text.
