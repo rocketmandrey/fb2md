@@ -18,28 +18,41 @@ def run_command(cmd, cwd=None):
 def convert_to_markdown(input_path, output_dir):
     """Convert ebook to markdown using the Go tool."""
     # Assuming running from project root
-    cmd = ["go", "run", ".", "--output-dir", str(output_dir), str(input_path)]
-    print(f"Converting {input_path} to Markdown...")
-    if run_command(cmd):
-        # Find the generated markdown file
-        # The Go tool logic for naming: filename without ext + .md
-        base_name = Path(input_path).stem
-        # It replaces spaces with underscores in some logic, but let's check
-        # Checking implementation: safeName := strings.ReplaceAll(withoutExt, string(filepath.Separator), "_")
-        # Go tool doesn't replace spaces in filename, only separators.
-        # However, checking `buildOutputPath`:
-        # withoutExt := strings.TrimSuffix(rel, filepath.Ext(rel))
-        # safeName := strings.ReplaceAll(withoutExt, string(filepath.Separator), "_")
-        # So if input is "books/My Book.epub", output is "markdown/My Book.md"
-        
-        md_file = Path(output_dir) / f"{base_name}.md"
-        if md_file.exists():
-            print(f"✓ Markdown created: {md_file}")
-            return md_file
+    # Determine if we should use the Go tool (FB2/EPUB) or Pandoc (others)
+    suffix = Path(input_path).suffix.lower()
+    base_name = Path(input_path).stem # Define base_name here, as it's used in both branches
+    
+    md_file = None # Initialize md_file to None
+
+    if suffix in ['.fb2', '.epub']:
+        cmd = ["go", "run", ".", "--output-dir", str(output_dir), str(input_path)]
+        print(f"Converting {input_path} to Markdown using fb2md...")
+        if run_command(cmd):
+            # fb2md naming convention: filename without ext + .md
+            # Go tool doesn't replace spaces in filename, only separators.
+            # So if input is "books/My Book.epub", output is "markdown/My Book.md"
+            md_file = Path(output_dir) / f"{base_name}.md"
+            if md_file.exists():
+                print(f"✓ Markdown created: {md_file}")
+                return md_file
+            else:
+                print(f"Warning: fb2md ran, but expected output file {md_file} not found. Falling back to Pandoc.")
         else:
-            # Try to find recent file if exact match fails?
-            print(f"Warning: Expected output file {md_file} not found.")
-            return None
+            print(f"Warning: fb2md failed for {input_path}. Falling back to Pandoc.")
+    
+    # Fallback to Pandoc for other formats (or if fb2md failed, or if suffix not .fb2/.epub)
+    print(f"Attempting conversion with Pandoc for {input_path}...")
+    md_file = Path(output_dir) / f"{base_name}.md" # Re-define md_file for pandoc output
+    cmd = ["pandoc", str(input_path), "--to", "markdown", "--output", str(md_file)]
+    # Optional: Extract media if possible? Pandoc handles it differently.
+    # cmd.extend(["--extract-media", str(output_dir)]) 
+    
+    if run_command(cmd):
+         if md_file.exists():
+            print(f"✓ Markdown created (via Pandoc): {md_file}")
+            return md_file
+            
+    print(f"Error: Failed to convert {input_path}")
     return None
 
 def translate_markdown(md_file, context):
@@ -96,7 +109,7 @@ def publish_to_telegraph(md_file):
 
 def main():
     parser = argparse.ArgumentParser(description="Unified eBook Converter & Processor")
-    parser.add_argument("input_file", help="Path to input book (FB2, EPUB)")
+    parser.add_argument("input_file", help="Path to input book (FB2, EPUB, or any Pandoc-supported format)")
     parser.add_argument("--translate", action="store_true", help="Improve translation using AI")
     parser.add_argument("--context", default="General", help="Context for translation (e.g. 'Science Fiction', 'Business')")
     parser.add_argument("--to-epub", action="store_true", help="Generate EPUB output")
