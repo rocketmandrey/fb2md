@@ -10,10 +10,13 @@ from pathlib import Path
 # Настройка клиента Anthropic
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
-def improve_text_block(text: str) -> str:
+def improve_text_block(text: str, context: str = "general") -> str:
     """Улучшает блок текста с помощью Claude."""
 
-    prompt = f"""Ты профессиональный литературный переводчик и редактор. Перед тобой русский перевод книги о коучинге и саморазвитии. Перевод сделан машинно и имеет много проблем.
+    prompt = f"""Ты профессиональный литературный переводчик и редактор. Перед тобой текст (перевод), который нужно улучшить.
+    Контекст/Тематика: {context}
+
+ТВОЯ ЗАДАЧА: Улучшить перевод, сделать его естественным, живым и профессиональным.
 
 ТВОЯ ЗАДАЧА: Улучшить перевод, сделать его естественным, живым и профессиональным.
 
@@ -52,7 +55,7 @@ def improve_text_block(text: str) -> str:
 
     return message.content[0].text
 
-def process_file(input_file: str, output_file: str, start_line: int = 188, chunk_size: int = 50):
+def process_file(input_file: str, output_file: str, start_line: int = 0, chunk_size: int = 50, context: str = "general"):
     """Обрабатывает файл блоками."""
 
     print(f"Читаю файл: {input_file}")
@@ -76,7 +79,7 @@ def process_file(input_file: str, output_file: str, start_line: int = 188, chunk
         print(f"\nОбрабатываю строки {current_line+1}-{end_line}/{total_lines}...")
 
         try:
-            improved_block = improve_text_block(block)
+            improved_block = improve_text_block(block, context)
             improved_lines.append(improved_block)
             if not improved_block.endswith('\n'):
                 improved_lines.append('\n')
@@ -101,7 +104,8 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='Improve translation using Claude')
     parser.add_argument('file', nargs='?', default='markdown/DreamFormulaRussian - Tomabechi.md', help='Input file path')
-    parser.add_argument('--start', type=int, default=188, help='Start line number')
+    parser.add_argument('--start', type=int, default=0, help='Start line number')
+    parser.add_argument('--context', type=str, default='General literature', help='Context/Topic of the book')
     args = parser.parse_args()
 
     input_file = args.file
@@ -112,4 +116,4 @@ if __name__ == "__main__":
         exit(1)
 
     # Начинаем со строки args.start
-    process_file(input_file, output_file, start_line=args.start, chunk_size=50)
+    process_file(input_file, output_file, start_line=args.start, chunk_size=50, context=args.context)

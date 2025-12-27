@@ -22,6 +22,8 @@ vendor/
 markdown/
 *_images/
 epub/
+input/
+output/
 
 # Keep sample files
 !README.md
@@ -46,4 +48,3 @@ epub/
 # Translation project files (keep)
 !book_ru/*.md
 !book_ru/image/
-book_ru copy/

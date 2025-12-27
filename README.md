@@ -9,6 +9,34 @@ A powerful and flexible toolset for converting ebook files (FB2, EPUB) into clea
 - **`markdown/`**: Default output directory. Converted files appear here.
 - **`scripts/`**: Helper Python and Shell scripts for post-processing (translation, publishing).
 - **`epub/`**, **`fb2/`**: Directories for specific format processing or storage.
+- **`input/`**: Place files here for the unified processing script.
+- **`output/`**: Final results from the unified processing script appear here.
+
+## 🔄 Unified Processing Workflow
+
+The **`scripts/process.py`** script provides a single entry point for the entire workflow: conversion, translation, and export.
+
+### Usage
+
+```bash
+python3 scripts/process.py <input_file> [options]
+```
+
+**Options:**
+- `--translate`: Improve translation using AI (requires `ANTHROPIC_API_KEY`)
+- `--context <topic>`: Context for translation (default: "General")
+- `--to-epub`: Generate EPUB output
+- `--to-fb2`: Generate FB2 output
+- `--to-telegraph`: Publish to Telegraph (requires `TELEGRAPH_ACCESS_TOKEN`)
+
+### Example
+
+Convert an EPUB to Markdown, improve its translation (specifying it's about "Business"), and then generate both EPUB and FB2 files:
+
+```bash
+python3 scripts/process.py input/my_book.epub --translate --context "Business" --to-epub --to-fb2
+```
+
 
 ## 🚀 Core Tool: `fb2md`
 
