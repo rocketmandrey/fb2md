@@ -18,9 +18,10 @@ go.work
 # Dependency directories
 vendor/
 
-# Output files
-*.md
+# Output directories
+markdown/
 *_images/
+epub/
 
 # Keep sample files
 !README.md
@@ -36,7 +37,12 @@ vendor/
 *.swo
 *~
 
-# Test files
-*.fb2
-!sample.fb2
-*.epub
+# Source files (we want to keep books in git)
+!books/*.fb2
+!books/*.epub
+!books/*.txt
+!books/*.pdf
+
+# Translation project files (keep)
+!book_ru/*.md
+!book_ru/image/
