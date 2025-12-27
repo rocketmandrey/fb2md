@@ -39,3 +39,4 @@ vendor/
 # Test files
 *.fb2
 !sample.fb2
+*.epub
