@@ -11,8 +11,11 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}=== Создание EPUB из Markdown ===${NC}\n"
 
 # Пути к файлам
-INPUT_MD="markdown/DreamFormulaRussian - Tomabechi.md"
-OUTPUT_EPUB="epub/DreamFormulaRussian - Tomabechi.epub"
+# Пути к файлам
+INPUT_MD="${1:-markdown/DreamFormulaRussian - Tomabechi.md}"
+BASE_NAME=$(basename "$INPUT_MD" .md)
+OUTPUT_EPUB="epub/${BASE_NAME}.epub"
+
 METADATA_FILE="metadata.yaml"
 
 # Создаём директорию для EPUB если её нет

@@ -97,8 +97,19 @@ def process_file(input_file: str, output_file: str, start_line: int = 188, chunk
     print("✓ Готово!")
 
 if __name__ == "__main__":
-    input_file = "/Users/andrey/Documents/Cursor/fb2epub-markdown converter/markdown/DreamFormulaRussian - Tomabechi.md"
-    output_file = input_file  # Перезаписываем тот же файл
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Improve translation using Claude')
+    parser.add_argument('file', nargs='?', default='markdown/DreamFormulaRussian - Tomabechi.md', help='Input file path')
+    parser.add_argument('--start', type=int, default=188, help='Start line number')
+    args = parser.parse_args()
 
-    # Начинаем со строки 188 (где закончили ручное редактирование)
-    process_file(input_file, output_file, start_line=188, chunk_size=50)
+    input_file = args.file
+    output_file = input_file  # Overwrite same file
+
+    if not os.path.exists(input_file):
+        print(f"Error: File not found: {input_file}")
+        exit(1)
+
+    # Начинаем со строки args.start
+    process_file(input_file, output_file, start_line=args.start, chunk_size=50)

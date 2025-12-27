@@ -3,6 +3,7 @@ import re
 import time
 from dotenv import load_dotenv
 from telegraph import Telegraph
+import argparse
 import markdown
 
 def create_telegraph_page(title, content_html, access_token):
@@ -30,7 +31,15 @@ def main():
     if not access_token:
         raise ValueError("TELEGRAPH_ACCESS_TOKEN environment variable not set.")
 
-    markdown_file_path = '/Users/andrey/Documents/Cursor/fb2epub-markdown converter/markdown/DreamFormulaRussian - Tomabechi.md'
+    parser = argparse.ArgumentParser(description='Publish book to Telegraph')
+    parser.add_argument('file', nargs='?', default='markdown/DreamFormulaRussian - Tomabechi.md', help='Path to markdown file')
+    args = parser.parse_args()
+
+    markdown_file_path = args.file
+    
+    if not os.path.exists(markdown_file_path):
+        print(f"Error: File not found: {markdown_file_path}")
+        return
 
     with open(markdown_file_path, 'r', encoding='utf-8') as f:
         full_content = f.read()
