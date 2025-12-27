@@ -46,3 +46,4 @@ epub/
 # Translation project files (keep)
 !book_ru/*.md
 !book_ru/image/
+book_ru copy/
