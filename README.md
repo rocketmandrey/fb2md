@@ -51,6 +51,13 @@ go run . --caffeinate --input-dir books
 ## 🛠 Helper Scripts (`scripts/`)
 
 Located in the `scripts/` directory, these tools assist with specific workflows. 
+
+**Setup:**
+Install the required Python dependencies:
+```bash
+pip install -r scripts/requirements.txt
+```
+
 **Note:** These scripts currently contain hardcoded paths for specific projects (e.g., *DreamFormulaRussian*). You will need to edit them to point to your specific files.
 
 ### 1. `improve_translation.py`
