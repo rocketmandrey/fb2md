@@ -39,6 +39,13 @@ output/
 *.swo
 *~
 
+# Secrets
+.env
+
+# Backups
+* copy/
+*.backup*
+
 # Source files (we want to keep books in git)
 !books/*.fb2
 !books/*.epub
